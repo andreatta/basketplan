@@ -1,16 +1,26 @@
 #!/usr/bin/env python
 
 """
-Python script to remove entries from ics calendar that don't contain specific pattern
+Python script to remove entries from ics calendar that don't contain specific pattern.
+
+Calendar for KBBV basketball groups:
+https://www.basketplan.ch/exportLeagueHoldingGamesICAL.do?leagueHoldingId=5186
 """
 
 import os.path
 import argparse
 import re
 
+"""
+Lines should be limited to 75 octets (not characters) long. Where a data item is too
+long to fit on a single line it can be continued on following lines by starting the
+continuation lines with a space character (in hex: 20) or a tab character (in hex: 09).
+Therefore reduce pattern to "Solo" to find matchups with long team names.
+"""
+
 BEGIN = 'BEGIN:VEVENT'
 END = 'END:VEVENT'
-PATTERN = 'SUMMARY:.*Solothurn'
+PATTERN = 'SUMMARY:.*Solo'
 EOF = 'END:VCALENDAR'
 NEWICS = 'BCS_2.ics'
 
