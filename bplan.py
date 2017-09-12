@@ -28,9 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('file', nargs='?', default='basketplan.ics')
 args = parser.parse_args()
 
-if os.path.exists(args.file):
-    print("converting calendar '%s' to '%s'" % (args.file, NEWICS))
-else:
+if not os.path.exists(args.file):
     print("file '%s' does not exist" % args.file)
     quit()
 
@@ -40,6 +38,7 @@ e = 0
 p = 0
 # add completed events from calendar to list
 event = []
+eventcount = 0
 
 with open(args.file, 'rt') as ics:
     with open(NEWICS, 'wt') as new:
@@ -67,9 +66,11 @@ with open(args.file, 'rt') as ics:
                 # Add event if it contains PATTERN
                 if p > b and p < e:
                     new.writelines(event)
+                    eventcount += 1
 
                 event = []
 
         # add last line to new file
         new.writelines(EOF)
 
+print("%d Matches added to calendar %s" % (eventcount, NEWICS))
