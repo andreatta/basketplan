@@ -20,9 +20,9 @@ Therefore reduce pattern to "Solo" to find matchups with long team names.
 
 BEGIN = 'BEGIN:VEVENT'
 END = 'END:VEVENT'
-PATTERN = 'SUMMARY:.*Solo'
+PATTERN = 'SUMMARY:.*Solo(\S*)?.([1-3])?'
 EOF = 'END:VCALENDAR'
-NEWICS = 'BCS_2.ics'
+NEWICS = 'BCS_#.ics'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file', nargs='?', default='basketplan.ics')
@@ -59,6 +59,10 @@ with open(args.file, 'rt') as ics:
             m = rgx.match(line)
             if m is not None:
                 p = i
+                #print (m.group(0))
+
+                if m.group(2) is not None:
+                    OUTFILE = NEWICS.replace('#', m.group(2))
 
             # end of event
             if END in line:
@@ -73,4 +77,5 @@ with open(args.file, 'rt') as ics:
         # add last line to new file
         new.writelines(EOF)
 
-print("%d Matches added to calendar %s" % (eventcount, NEWICS))
+os.rename(NEWICS, OUTFILE)
+print("%d Matches added to calendar -> '%s'" % (eventcount, OUTFILE))
